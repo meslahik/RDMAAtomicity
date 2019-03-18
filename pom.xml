@@ -8,6 +8,14 @@
     <artifactId>RDMAAtomicity</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.ibm.disni</groupId>
+            <artifactId>disni</artifactId>
+            <version>2.0</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
