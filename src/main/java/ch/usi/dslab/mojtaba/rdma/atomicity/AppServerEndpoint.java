@@ -2,12 +2,10 @@ package ch.usi.dslab.mojtaba.rdma.atomicity;
 
 import com.ibm.disni.RdmaActiveEndpoint;
 import com.ibm.disni.RdmaActiveEndpointGroup;
-import com.ibm.disni.verbs.IbvMr;
 import com.ibm.disni.verbs.IbvWC;
 import com.ibm.disni.verbs.RdmaCmId;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class AppServerEndpoint extends RdmaActiveEndpoint {

@@ -2,7 +2,6 @@ package ch.usi.dslab.mojtaba.rdma.atomicity;
 
 import com.ibm.disni.RdmaActiveEndpointGroup;
 import com.ibm.disni.verbs.IbvMr;
-import com.ibm.disni.verbs.IbvRecvWR;
 import com.ibm.disni.verbs.IbvSendWR;
 import com.ibm.disni.verbs.IbvSge;
 import org.apache.commons.cli.ParseException;
