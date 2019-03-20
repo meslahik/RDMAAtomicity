@@ -44,10 +44,7 @@ public class ClientWrite {
 
     private void run() throws InterruptedException, IOException {
 
-        //post receive operation to receive remote memory info
-        postRecv();
-
-        //wait for remote memory information
+        //wait for remote memory information; the receive request posted when client endpoint is created (AppClientEndpoint.init())
         endpoint.getWcEvents().take();
 
         //process received data
@@ -57,97 +54,23 @@ public class ClientWrite {
             //change data in remote memory
             writeData(i);
 
-            //wait for writing remote memory
+            //wait for writing remote memory to complete
             endpoint.getWcEvents().take();
-//            System.out.println("ClientWrite::write completed");
-
-//            //post read the remote data; issue a one-sided rdma read operation to fetch the content from remote buffer
-//            postRead();
-//
-//            //wait for reading remote memory
-//            endpoint.getWcEvents().take();
-////            System.out.println("ClientWrite::read completed");
-//
-//            //Read changed data
-//            readData();
         }
-        System.out.println("finished!");
-
-        //post receive operation to receive remote memory info
-        postRecv();
-
-        //wait for remote memory information
-        endpoint.getWcEvents().take();
-
-        //process received data
-        processRecv();
+        System.out.println("ClientWrite::finished!");
     }
 
-    private void postRecv() throws IOException{
-//        IbvSge sgeRecv = new IbvSge();
-//        sgeRecv.setAddr(recMr.getAddr());
-//        sgeRecv.setLength(recMr.getLength());
-//        sgeRecv.setLkey(recMr.getLkey());
-//
-//        LinkedList<IbvSge> sgeListRecv = new LinkedList<>();
-//        sgeListRecv.add(sgeRecv);
-//
-//        IbvRecvWR recvWR = new IbvRecvWR();
-//        recvWR.setSg_list(sgeListRecv);
-//        recvWR.setWr_id(2001);
-//
-//        LinkedList<IbvRecvWR> wrListRecv = new LinkedList<>();
-//        wrListRecv.add(recvWR);
-//
-//        endpoint.postRecv(wrListRecv).execute();
-//        System.out.println("ClientWrite::initiated recv");
-    }
-
-    private void processRecv() {//processRecv
+    private void processRecv() {
         endpoint.recBuf.clear();
         remBufAddr = endpoint.recBuf.getLong();
         remBufLength = endpoint.recBuf.getInt();
         remBufLkey = endpoint.recBuf.getInt();
         endpoint.recBuf.clear();
-        System.out.println("ClientWrite::receiving rdma information, addr: " + remBufAddr + ", length: " + remBufLength + ", lkey= " + remBufLkey);
+        System.out.println("ClientWrite::receiving remote memory information, addr: " + remBufAddr + ", length: " + remBufLength + ", lkey= " + remBufLkey);
     }
 
-//    private void postRead() throws IOException{
-//        IbvSge sge = new IbvSge();
-//        sge.setAddr(dataMr.getAddr());
-//        sge.setLength(dataMr.getLength());
-//        sge.setLkey(dataMr.getLkey());
-//
-//        LinkedList<IbvSge> sgeList = new LinkedList<>();
-//        sgeList.add(sge);
-//
-//        IbvSendWR sendWR = new IbvSendWR();
-//        sendWR.setWr_id(1001);
-//        sendWR.setSg_list(sgeList);
-//        sendWR.setOpcode(IbvSendWR.IBV_WR_RDMA_READ);
-//        sendWR.setSend_flags(IbvSendWR.IBV_SEND_SIGNALED);
-//        sendWR.getRdma().setRemote_addr(remBufAddr);
-//        sendWR.getRdma().setRkey(remBufLkey);
-//
-//        LinkedList<IbvSendWR> wrListSend = new LinkedList<>();
-//        wrListSend.add(sendWR);
-//
-//        endpoint.postSend(wrListSend).execute();
-//    }
-
-//    private void readData() {
-//        ByteBuffer dataBuf = endpoint.getDataBuf();
-//        dataBuf.clear();
-//        int num = dataBuf.asIntBuffer().get();
-//        System.out.println("Array element: " + num);
-//        for (int i=0; i < 99; i++) {
-//            int num2 = dataBuf.asIntBuffer().get();
-//            if (num2 != num)
-//                System.out.println("A difference observed");
-//        }
-//    }
-
     private void writeData(int num) throws IOException {
+        sendBuf.clear();
         for (int i=0; i< bufferSize; i++)
             sendBuf.asIntBuffer().put(num);
 

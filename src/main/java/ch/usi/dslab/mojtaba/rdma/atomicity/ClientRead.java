@@ -44,13 +44,10 @@ public class ClientRead {
 
     private void run() throws InterruptedException, IOException {
 
-        //post receive operation to receive remote memory info
-        postRecv();
-
         //wait for remote memory information
         endpoint.getWcEvents().take();
 
-        //process received data
+        //process received data; the receive request posted when client endpoint is created (AppClientEndpoint.init())
         processRecv();
 
         for (int i=0; i < 10000000; i++) {
@@ -60,23 +57,19 @@ public class ClientRead {
             //wait for reading remote memory
             endpoint.getWcEvents().take();
 
-            //Read changed data
+            //Read received data through rdma
             readData();
         }
         System.out.println("ClientRead::finished!");
     }
 
-    private void postRecv() throws IOException{
-
-    }
-
-    private void processRecv() {//processRecv
+    private void processRecv() {
         endpoint.recBuf.clear();
         remBufAddr = endpoint.recBuf.getLong();
         remBufLength = endpoint.recBuf.getInt();
         remBufLkey = endpoint.recBuf.getInt();
         endpoint.recBuf.clear();
-        System.out.println("ClientRead::receiving rdma information, addr: " + remBufAddr + ", length: " + remBufLength + ", lkey= " + remBufLkey);
+        System.out.println("ClientRead::receiving remote memory information, addr: " + remBufAddr + ", length: " + remBufLength + ", lkey= " + remBufLkey);
     }
 
     private void postRead() throws IOException {

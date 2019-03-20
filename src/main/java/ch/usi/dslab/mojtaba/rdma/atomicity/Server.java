@@ -66,6 +66,7 @@ public class Server implements Serializable {
     void ReadLocalMrmory() {
         int i = 0;
         while (true) {
+            dataBuf.clear();
             int num = dataBuf.asIntBuffer().get();
             for (int j=0; j < bufferSize; j++) {
                 int num2 = dataBuf.asIntBuffer().get();
@@ -116,19 +117,6 @@ public class Server implements Serializable {
         endpoint.getWcEvents().take();
         System.out.println("Server::memory information sent");
     }
-
-//    private void run() throws InterruptedException {
-//        while(true) {
-//            //wait for work completion // TODO: does remote write create work completions
-//            endpoint.getWcEvents().take();
-//            System.out.println("Server::memory written by remote process");
-//
-//            ByteBuffer dataBuf = endpoint.getDataBuf();
-//            dataBuf.clear();
-//            int num = dataBuf.asIntBuffer().get();
-//            System.out.println("Server::Current value: " + num);
-//        }
-//    }
 
     public void launch(String[] args) throws Exception{
         CmdLineCommon cmdLine = new CmdLineCommon("Server");
